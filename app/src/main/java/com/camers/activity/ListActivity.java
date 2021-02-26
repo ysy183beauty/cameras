@@ -14,12 +14,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.camers.R;
-import com.camers.entity.Camera;
 import com.camers.entity.CameraEntity;
 import com.camers.util.Constant;
 import com.camers.util.HttpResult;
