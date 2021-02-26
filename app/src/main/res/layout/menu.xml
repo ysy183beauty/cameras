@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="菜单详细列表"
+        android:gravity="center" android:textSize="@dimen/dp_30"
+        android:layout_marginTop="@dimen/margin_litter"
+        />
+    <View android:layout_width="match_parent" android:layout_height="@dimen/dp_1"
+        android:background="@color/orange_main"
+        />
+    <Button
+        android:id="@+id/singleButton"
+        android:layout_margin="@dimen/dp_5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="单点导航" android:background="@drawable/shape"
+        android:textColor="@color/background" android:textSize="@dimen/text_size_most"
+        android:onClick="singleMap"/>
+    <Button
+        android:layout_margin="@dimen/dp_5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="多点导航" android:background="@drawable/shapemul"
+        android:textColor="@color/background" android:textSize="@dimen/text_size_most"
+        android:onClick="mulMap"/>
+    <Button
+        android:layout_margin="@dimen/dp_5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="新增信息" android:background="@drawable/shapeadd"
+        android:textColor="@color/background" android:textSize="@dimen/text_size_most"
+        android:onClick="addInfo"/>
+    <Button
+        android:layout_margin="@dimen/dp_5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="编辑信息" android:background="@drawable/shapeedit"
+        android:textColor="@color/background" android:textSize="@dimen/text_size_most"
+        android:onClick="eidtInfo"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_5"
+            android:background="@drawable/shapereturn"
+            android:focusable="false" android:textColor="@color/background"
+            android:textSize="@dimen/text_size_most"
+            android:text="退出登录"
+            android:onClick="returnLogin" />
+</LinearLayout>
+</LinearLayout>

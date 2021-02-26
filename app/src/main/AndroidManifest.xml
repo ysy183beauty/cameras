@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.camers"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <!-- 百度地图需要的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <application android:label="@string/app_name" android:icon="@drawable/map"
+        android:theme="@style/BaseStyle" android:usesCleartextTraffic="true"
+        >
+        <activity android:name=".activity.LoginActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.MenuActivity"/>
+        <activity android:name=".activity.AddActivity"/>
+        <activity android:name=".activity.ListActivity"/>
+        <activity android:name=".activity.EditActivity"/>
+        <activity android:name=".activity.LocationActivity"/>
+        <activity android:name=".activity.ListSingleActivity"/>
+        <activity android:name=".activity.SingMapActivity"/>
+        <activity android:name=".activity.MulMapActivity"/>
+        <activity android:name=".activity.MulListActivity"/>
+        <!--添加百度服务-->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="G7P0fNCKFIZZByYMHNvyjhUZoFtQ9hZF" />
+    </application>
+</manifest>
