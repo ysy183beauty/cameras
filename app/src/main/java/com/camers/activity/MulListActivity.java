@@ -11,18 +11,28 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
 import com.camers.R;
 import com.camers.entity.CameraEntity;
+import com.camers.entity.DistanceEntity;
 import com.camers.util.Constant;
 import com.camers.util.HttpResult;
 import com.camers.widget.LoadingDialog;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 public class MulListActivity extends Activity {
@@ -31,11 +41,24 @@ public class MulListActivity extends Activity {
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
     private List<CameraEntity> list=new ArrayList<>();
     private Map<Integer,CameraEntity> selectMap=new HashMap<>();
+    //获取当前位置信息
+    private final String TAG="MulListActivity";
+    private LocationClient locationClient;
+    private BDLocationListener bdLocationListener;
+    private double currentLongitude=0;
+    private double currentLatitude=0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_mul);
+        SDKInitializer.initialize(getApplicationContext());
         initComplete();
+        // 声明LocationClient类  
+        locationClient=new LocationClient(getApplicationContext());
+        bdLocationListener=new MulListActivity.MyBDLocationListener();
+        // 注册监听  
+        locationClient.registerLocationListener(bdLocationListener);
+        getLocation();
     }
 
     private void initComplete(){
@@ -188,14 +211,40 @@ public class MulListActivity extends Activity {
         if(selectMap.isEmpty()){
             Toast.makeText(this,"请选择数据信息！",Toast.LENGTH_LONG).show();
         }else{
-            Intent intent = new Intent(MulListActivity.this,MulMapActivity.class);
-            List<Integer> ids=new ArrayList<>();
-            for(Integer key:selectMap.keySet()){
-                ids.add(key);
-            }
-            intent.putExtra("ids",JSONArray.toJSONString(ids));
-            startActivity(intent);
+            doCalcuteDistance();
         }
+    }
+
+    public void doCalcuteDistance(){
+        showLoading();//显示加载框
+        //组装需要的数据
+       List<Integer> list=new ArrayList<>();
+        for(Integer key:selectMap.keySet()){
+            list.add(selectMap.get(key).getId());
+        }
+        //调用后台数据信息
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("currentLocation","100.235496@25.613911");
+        params.put("data",JSONObject.toJSONString(list));
+        Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                JSONObject jsonObject = JSONObject.parseObject(msg.obj + "");
+                JSONArray arr=JSONArray.parseArray(jsonObject.get("data").toString());
+                List<DistanceEntity> list= JSONObject.parseArray(arr.toJSONString(), DistanceEntity.class);
+                Intent intent = new Intent(MulListActivity.this,MulMapActivity.class);
+                intent.putExtra("listobj", (Serializable)list);
+                startActivity(intent);
+            }
+        };
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                new HttpResult(Constant.BASEURL+"calcuteDistance",params,mHandler).getResult();
+            }
+        };
+        thread.start();
     }
 
 
@@ -231,6 +280,45 @@ public class MulListActivity extends Activity {
                 }
             });
 
+        }
+    }
+    /**
+     * 获取当前位置信息
+     */
+    public void getLocation(){
+        // 声明定位参数
+        LocationClientOption option=new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);// 设置定位模式 高精度  
+        option.setCoorType("bd09ll");// 设置返回定位结果是百度经纬度 默认gcj02  
+        option.setScanSpan(5000);// 设置发起定位请求的时间间隔 单位ms  
+        option.setIsNeedAddress(true);// 设置定位结果包含地址信息  
+        option.setNeedDeviceDirect(true);// 设置定位结果包含手机机头 的方向  
+        // 设置定位参数  
+        locationClient.setLocOption(option);
+        // 启动定位  
+        locationClient.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 取消监听函数
+        if(locationClient!=null){
+            locationClient.unRegisterLocationListener(bdLocationListener);
+        }
+    }
+    private class MyBDLocationListener implements BDLocationListener{
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if(location!=null){
+                // 根据BDLocation 对象获得经纬度以及详细地址信息
+                currentLatitude=location.getLatitude();
+                currentLongitude=location.getLongitude();
+                if(locationClient.isStarted()){
+                    // 获得位置之后停止定位  
+                    locationClient.stop();
+                }
+            }
         }
     }
 }

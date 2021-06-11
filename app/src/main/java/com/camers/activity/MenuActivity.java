@@ -46,4 +46,5 @@ public class MenuActivity extends Activity {
         startActivity(new Intent(this,MulListActivity.class));
         finish();//关闭页面
     }
+
 }
