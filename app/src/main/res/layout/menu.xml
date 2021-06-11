@@ -43,7 +43,6 @@
         android:text="编辑信息" android:background="@drawable/shapeedit"
         android:textColor="@color/background" android:textSize="@dimen/text_size_most"
         android:onClick="eidtInfo"/>
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
