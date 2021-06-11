@@ -224,7 +224,7 @@ public class MulListActivity extends Activity {
         }
         //调用后台数据信息
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("currentLocation","100.235496@25.613911");
+        params.put("currentLocation",currentLongitude+"@"+currentLatitude);
         params.put("data",JSONObject.toJSONString(list));
         Handler mHandler = new Handler() {
             @Override
